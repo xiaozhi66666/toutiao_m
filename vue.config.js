@@ -1,5 +1,5 @@
-module.default = {
-  devSerVer: {
+module.exports = {
+  devServer: {
     open: true
   }
 }

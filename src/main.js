@@ -2,7 +2,14 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-
+// 引入字体图标css
+import '@/assets/toutiao-icon.css'
+// 引入全局vant组件
+import Vant from 'vant'
+import 'vant/lib/index.css'
+// 引入 包 amfe-flexible 使用其动态设置 REM 基准值（html 标签的字体大小）  1/10视口宽度
+import 'amfe-flexible'
+Vue.use(Vant)
 Vue.config.productionTip = false
 
 new Vue({
