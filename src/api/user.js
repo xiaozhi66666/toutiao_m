@@ -3,8 +3,8 @@ import request from '@/utils/request'
 
 /**
  * 登录请求
- * @param {mobile} mobile 手机号
- * @param {code} code   验证码
+ * @param {String} mobile 手机号
+ * @param {Number} code   验证码
  * @returns Promise对象
  */
 // 导出基于根请求配置好的登录获取数据请求
@@ -17,11 +17,15 @@ export const loginApi = (mobile, code) => {
     }
   })
 }
-// export const loginApi = (mobile, code) => request({
-//   method: 'POST',
-//   url: '/v1_0/authorizations',
-//   data: {
-//     mobile,
-//     code
-//   }
-// })
+
+/**
+ *  发送短信验证码
+ * @param {Number} mobile
+ * @returns Promise
+ */
+export const sendCodeApi = (mobile) => {
+  return request({
+    method: 'GET',
+    url: `/v1_0/sms/codes/${mobile}`
+  })
+}
