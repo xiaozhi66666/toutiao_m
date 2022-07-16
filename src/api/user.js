@@ -1,6 +1,7 @@
 // 导入request
 import request from '@/utils/request'
-
+// 导入store
+// import store from '@/store'
 /**
  * 登录请求
  * @param {String} mobile 手机号
@@ -27,5 +28,33 @@ export const sendCodeApi = (mobile) => {
   return request({
     method: 'GET',
     url: `/v1_0/sms/codes/${mobile}`
+  })
+}
+
+/**
+ * 获取用户自己信息
+ * @returns Promise
+ */
+export const getUserInfoApi = () => {
+  return request({
+    url: '/v1_0/user'
+    // 在请求中设置请求头
+    // headers: {
+    //   Authorization: `Bearer ${store.state.user.token}`
+    // }
+  })
+}
+
+/**
+ *获取用户个人资料
+ * @returns Promise
+ */
+export const getUserMaterialApi = () => {
+  return request({
+    url: '/v1_0/user/profile'
+    // 在请求中设置请求头
+    // headers: {
+    //   Authorization: `Bearer ${store.state.user.token}`
+    // }
   })
 }

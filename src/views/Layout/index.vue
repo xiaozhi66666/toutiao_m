@@ -17,7 +17,7 @@
       </van-tabbar-item>
           <van-tabbar-item to="/profile">
           <span class="toutiao toutiao-wode" slot="icon"></span>
-          <p>我的</p>
+          <p>{{$store.state.user.token ? "我的" : "未登录"}}</p>
       </van-tabbar-item>
     </van-tabbar>
     </div>
@@ -42,6 +42,10 @@ export default {
       }
       .van-tabbar-item__text{
         height: 50px;
+        p{
+          margin-top:3px;
+          margin-bottom: 0;
+        }
       }
 
     }

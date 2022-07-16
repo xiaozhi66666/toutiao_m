@@ -82,7 +82,7 @@ export default {
       })
       try {
         const res = await loginApi(this.mobile, this.code)
-        console.log(res)
+        // console.log(res)
         // 向vuex中添加用户token
         this.$store.commit('setUser', res.data.data)
         // 跳转到profile
