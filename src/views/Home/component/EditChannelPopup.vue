@@ -64,7 +64,7 @@ export default {
     async getAllChannel () {
       const { data } = await getAllChannelApi()
       this.allChannels = data.data.channels
-      console.log(data)
+      // console.log(data)
     },
     // 删除父组件中传过来的数组元素，子传父
     delMychannel (id, index) {

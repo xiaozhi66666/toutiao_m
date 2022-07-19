@@ -4,3 +4,5 @@ export * from '@/api/user'
 export * from '@/api/channel'
 // 新闻模块
 export * from '@/api/news'
+// 搜索模块
+export * from '@/api/search'
