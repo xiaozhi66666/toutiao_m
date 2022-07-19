@@ -20,14 +20,14 @@
   </van-tabs>
     <!-- tabs选项卡E -->
     <!-- 弹出层S -->
-<EditChannelPopup ref="popUp" :myChannels=myChannels></EditChannelPopup>
+<EditChannelPopup ref="popUp" :myChannels=myChannels @delMyChannel=delMyChannel @changeChannel=changeChannel @addChannel=addChannel></EditChannelPopup>
     <!-- 弹出层E -->
   </div>
 </template>
 
 <script>
 // 导入获取用户的频道的方法
-import { getMyChannelsApi } from '@/api'
+import { getMyChannelsApi, getLocalChannel, setLocalChannel, delMyChannelsApi, addChannelApi } from '@/api'
 // 导入那文章列表组件
 import ArtistList from './component/ArtistList.vue'
 // 引入弹框组件
@@ -39,7 +39,7 @@ export default {
   },
   data () {
     return {
-      active: 2,
+      active: 0,
       myChannels: [],
       isShow: false
     }
@@ -47,18 +47,73 @@ export default {
   created () {
     this.getMyChannels()
   },
+  computed: {
+    isLogin () {
+      return !!this.$store.state.user.token
+    }
+  },
   methods: {
     async getMyChannels () {
       try {
-        const { data } = await getMyChannelsApi()
-        this.myChannels = data.data.channels
+        // const { data } = await getMyChannelsApi()
+        // this.myChannels = data.data.channels
+        // 未登录分2种情况
+        // 1：本地有值，从本地取
+        // 2：无值，发请求，拿默认值
+        if (!this.isLogin) {
+          const data = getLocalChannel()
+          if (data) {
+            this.myChannels = data
+          } else {
+            const { data } = await getMyChannelsApi()
+            this.myChannels = data.data.channels
+          }
+        } else {
+          const { data } = await getMyChannelsApi()
+          this.myChannels = data.data.channels
+        }
       } catch (error) {
         this.$toast.fail('请重新刷新获取数据！')
       }
     },
     isShowPopup () {
       this.$refs.popUp.isShow = true
+    },
+    // 删除我的频道
+    async delMyChannel (id) {
+      this.myChannels = this.myChannels.filter(item => item.id !== id)
+      if (!this.isLogin) {
+        setLocalChannel(this.myChannels)
+      } else {
+        // 已登录，发删除请求，删除数据库的频道
+        try {
+          const res = await delMyChannelsApi(id)
+          console.log(res)
+        } catch (error) {
+          return this.$toast.fial('删除频道失败！')
+        }
+      }
+      this.$toast.success('删除频道成功！')
+    },
+    // 切换我的频道
+    changeChannel (ind) {
+      this.active = ind
+    },
+    // 添加推荐到我的频道
+    async addChannel (channel) {
+      this.myChannels.push(channel)
+      if (!this.isLogin) {
+        setLocalChannel(this.myChannels)
+      } else {
+        try {
+          await addChannelApi(channel.id, this.myChannels.length)
+        } catch (error) {
+          return this.$toast.fail('添加频道成功！')
+        }
+      }
+      this.$toast.success('添加频道成功！')
     }
+
   }
 }
 </script>

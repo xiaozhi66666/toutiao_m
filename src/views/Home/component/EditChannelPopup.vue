@@ -7,14 +7,14 @@
         <!-- 我的频道标题区域S -->
         <div class="my-channel-title">
             <van-cell title="我的频道" >
-                <van-button class="edit-btn" size="small" round>编辑</van-button>
+                <van-button class="edit-btn" size="small" round @click="isEdit = !isEdit">{{isEdit ? '完成' : '编辑'}}</van-button>
             </van-cell>
         </div>
         <!-- 我的频道标题区域E -->
         <!-- 我的频道内容区域S -->
         <div class="my-channel-content">
         <van-grid :border="false" gutter="10px">
-            <van-grid-item :text="item.name" v-for="item in myChannels" :key="item.id"> <template #icon><van-icon name="close" /> </template>  </van-grid-item>
+            <van-grid-item :text="item.name" v-for="(item,index) in myChannels" :key="item.id" :class="{'active-channel':item.name=='推荐'}" @click="delMychannel(item.id,index)"> <template #icon><van-icon name="close" v-show="isEdit && item.name !== '推荐' "/> </template>  </van-grid-item>
         </van-grid>
         </div>
         <!-- 我的频道内容区域E -->
@@ -25,7 +25,7 @@
         <van-cell title="推荐频道"></van-cell>
         <!-- 内容区域S -->
          <van-grid :border="false" gutter="10px">
-            <van-grid-item :text="item.name" icon="plus" v-for="item in recommendChannels" :key="item.id"/>
+            <van-grid-item :text="item.name" icon="plus" v-for="item in recommendChannels" :key="item.id" @click="addChannel(item)"/>
         </van-grid>
         <!-- 内容区域E -->
         <!-- 推荐频道E -->
@@ -48,8 +48,9 @@ export default {
   },
   data () {
     return {
-      isShow: true,
-      allChannels: []
+      isShow: false,
+      allChannels: [],
+      isEdit: false
     }
   },
   created () {
@@ -64,6 +65,23 @@ export default {
       const { data } = await getAllChannelApi()
       this.allChannels = data.data.channels
       console.log(data)
+    },
+    // 删除父组件中传过来的数组元素，子传父
+    delMychannel (id, index) {
+      if (this.isEdit && id !== 0) {
+        return this.$emit('delMyChannel', id)
+      }
+      // 处于完成状态/未编辑状态
+      if (!this.isEdit) {
+        // 跳转切换之前先关闭弹出层
+        this.isShow = false
+        // 将当前点击的索引值传递到父组件中进行切换
+        this.$emit('changeChannel', index)
+      }
+    },
+    // 添加子组件中传过来的数组元素，子传父
+    addChannel (item) {
+      this.$emit('addChannel', { ...item })
     }
   },
   computed: {
@@ -84,6 +102,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+// 高亮频道
+.active-channel{
+    :deep(.van-grid-item__text){
+      color:green
+    }
+}
 .popupMain{
     padding-top:100px;
     .edit-btn{
