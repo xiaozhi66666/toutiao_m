@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @click="toContent(articleInfo.art_id)">
       <!-- 无图片 -->
       <van-cell :title="articleInfo.title" :label="articleDesc" v-if="articleInfo.cover.type===0"/>
       <!-- 1张图片 -->
@@ -52,11 +52,18 @@ export default {
   },
 
   mounted () {
-
   },
 
   methods: {
-
+    toContent (id) {
+      // 获取到当前点击到的文章的art_id值，保存，发起请求获取文章详情数据
+      this.$router.push({
+        name: 'articleinfo',
+        params: {
+          id
+        }
+      })
+    }
   }
 }
 </script>

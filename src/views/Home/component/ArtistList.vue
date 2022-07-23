@@ -98,6 +98,15 @@ export default {
         // 将下拉刷新状态手动设置为false
         this.refreshing = false
       }
+    },
+    // 点击文章项跳转到对应文章页面
+    toContent (id) {
+      this.$router.push({
+        name: 'articleinfo',
+        params: {
+          art_id: id
+        }
+      })
     }
   }
 }

@@ -58,3 +58,26 @@ export const getUserMaterialApi = () => {
     // }
   })
 }
+
+/**
+ *关注用户
+ * @param {String} id //关注对象用户的id
+ * @returns Promise
+ */
+export const followingsAPI = (id) => request({
+  url: '/v1_0/user/followings',
+  method: 'POST',
+  data: {
+    target: id
+  }
+})
+
+/**
+ *关注用户
+ * @param {String} id //需要取消关注对象用户的id
+ * @returns Promise
+ */
+export const cancelFollowingsAPI = (id) => request({
+  url: `/v1_0/user/followings/${id}`,
+  method: 'DELETE'
+})

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="histroy-container">
         <!-- Search -->
         <form action="/">
         <van-search
@@ -11,7 +11,6 @@
           background="#3296fa"
           class="search"
           @focus="showSearchSuggest"
-          @clear="clear"
         > </van-search>
 
         <!-- 建议/历史/结果 -->
@@ -19,7 +18,7 @@
         <SearchResult></SearchResult>
         <SearchSuggest></SearchSuggest> -->
         <!-- 动态组件 -->
-        <component :is="componentNmae" :keyword="keyWord" @changeIsShow = "changeIsShow"></component>
+        <component :is="componentNmae" :keyword="keyWord" @changeIsShow = "changeIsShow" class="components"></component>
 </form>
     </div>
 </template>
@@ -100,10 +99,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
+ .histroy-container{
+  background-color: #f5f7f9;
+  height:100vh
+}
+
 .search{
+  position:fixed;
+  top:0;
+  margin-bottom:20px;
+  z-index: 222;
+  width: 100%;
   [role="button"]{
     color: #fff
   }
+}
+.components{
+  margin-top:120px;
 }
 
 </style>

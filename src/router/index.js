@@ -36,10 +36,16 @@ const routes = [
   {
     path: '/user',
     component: () => import('@/views/User')
-  }, {
+  },
+  {
     path: '/search',
     name: 'search',
     component: () => import('@/views/Search')
+  },
+  {
+    path: '/articleinfo',
+    name: 'articleinfo',
+    component: () => import('@/views/articleinfo')
   }
 ]
 

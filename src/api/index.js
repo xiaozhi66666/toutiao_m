@@ -6,3 +6,5 @@ export * from '@/api/channel'
 export * from '@/api/news'
 // 搜索模块
 export * from '@/api/search'
+// 评论模块
+export * from '@/api/comment'
