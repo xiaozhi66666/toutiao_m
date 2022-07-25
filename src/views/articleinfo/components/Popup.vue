@@ -235,6 +235,7 @@ export default {
         }
       }
     },
+    // 点赞评论
     async changeLiking (id, isLike) {
       // 已被点赞
       if (isLike) {

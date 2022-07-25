@@ -53,7 +53,7 @@
                  :error.sync="error"
                 >
             <!-- 评论区域S -->
-            <ContentItem :commentList="commentList" @change="change"></ContentItem>
+            <ContentItem :commentList="commentList" @change="change" @changeCommentList="changeCommentList"></ContentItem>
             <!-- 评论区域E -->
             </van-list>
         </main>
@@ -185,7 +185,6 @@ export default {
           this.isLike = true
         }
         const { data } = await getCommentsAplyAPI('a', this.artId, this.offset, this.limit)
-        console.log(data)
         // 获取第一次请求的最后一个评论的id
         this.offset = data.data.last_id || ''
         this.commentList = data.data.results
@@ -218,7 +217,6 @@ export default {
       if (this.isfollow) {
         try {
           const res = await followingsAPI(this.authId)
-          console.log(res)
           if (res.data.message === 'OK') {
             this.$toast.success('关注用户成功')
           }
@@ -298,7 +296,6 @@ export default {
       } else {
         try {
           const res = await cancelLikeAPI(this.artId)
-          console.log(res)
           if (res.status === 204) {
             this.$toast.success('取消点赞成功')
           }
@@ -337,6 +334,14 @@ export default {
     },
     // 子组件中触发刷新数组内容变化
     async change () {
+      try {
+        const { data } = await getCommentsAplyAPI('a', this.artId, this.offset, this.limit)
+        this.commentList = data.data.results
+      } catch (error) {
+        this.$toast.fail('服务器开了点小差，请稍后重试！')
+      }
+    },
+    async changeCommentList () {
       try {
         const { data } = await getCommentsAplyAPI('a', this.artId, this.offset, this.limit)
         this.commentList = data.data.results
@@ -385,6 +390,7 @@ main{
         display:flex;
         align-items:center;
         .author-name-time{
+          width: 200px;
             position: relative;
             padding-left: 20px;
             display:flex;

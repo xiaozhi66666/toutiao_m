@@ -11,7 +11,7 @@
     </van-nav-bar>
     <!-- 标题导航栏E -->
     <!-- tabs选项卡S -->
-    <van-tabs v-model="active">
+    <van-tabs v-model="active" swipeable>
     <van-tab :title="item.name" v-for="item in myChannels" :key="item.id">
       <ArtistList :id=item.id></ArtistList>
       </van-tab>

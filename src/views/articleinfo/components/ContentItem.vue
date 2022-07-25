@@ -111,6 +111,7 @@ export default {
         //  保存对应id的对象
         const obj = aplyList.find(item => item.com_id === id)
         this.currentObj = obj
+        this.$emit('changeCommentList')
       } catch (error) {
 
       }
@@ -123,7 +124,6 @@ export default {
         // 取消点赞
         try {
           const res = await delCommentLikeAPI(id)
-          console.log(res)
           if (res.status === 204) {
             this.$emit('change')
             return this.$toast.success('取消点赞成功！')
