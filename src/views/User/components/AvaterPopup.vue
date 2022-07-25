@@ -1,20 +1,24 @@
 <template>
-  <div class="userAvaterPopuo">
-    <div class="img-container">
-      <van-loading
-        size="40px"
-        vertical
-        type="spinner"
-        color="#1989fa"
-        v-show="isShowLoding"
-        >上传中...</van-loading
-      >
-      <img :src="photo" alt="" ref="avaterImg" />
+  <div class="PopuoBody">
+    <div class="userAvaterPopuo">
+      <div class="img-container">
+        <van-loading
+          size="40px"
+          vertical
+          type="spinner"
+          color="#1989fa"
+          v-show="isShowLoding"
+          >上传中...</van-loading
+        >
+        <img :src="photo" alt="" ref="avaterImg" />
+      </div>
     </div>
-    <van-cell
-      ><span slot="title" @click="cancelShow">取消</span>
-      <span @click="confirm">确认</span></van-cell
-    >
+    <div class="footer">
+      <van-cell
+        ><span slot="title" @click="cancelShow">取消</span>
+        <span @click="confirm">确认</span></van-cell
+      >
+    </div>
   </div>
 </template>
 
@@ -54,17 +58,17 @@ export default {
   methods: {
     confirm () {
       this.isShowLoding = true
-      //   this.$emit('confirm')
       const fm = new FormData()
       this.myCropper.getCroppedCanvas().toBlob(async (blob) => {
         fm.append('photo', blob)
         try {
           const res = await setUserAvatarAPI(blob)
-          console.log(res)
           if (res.status === 200) {
+            // 关闭加载
             this.isShowLoding = false
+            // 关闭弹层，将远端存放保存后的图片路径传递给父组件，展示出最新的头像图片
+            this.$emit('confirm', res.data.data.photo)
             this.$toast.success('上传头像成功！')
-            this.$emit('confirm', res.data.data.photo) // 关闭弹层，将远端存放保存后的图片路径传递给父组件，展示出最新的头像图片
           }
         } catch (error) {
           this.$toast.fail('上传头像失败，请稍后重试!')
@@ -80,6 +84,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+:deep(.van-overlay) {
+  position: relative;
+  // height: 100%;
+  .footer {
+    position: absolute;
+    bottom: 0;
+  }
+}
 .userAvaterPopuo {
   position: relative;
   background-color: #e3e3e3;

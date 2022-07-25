@@ -271,10 +271,10 @@ export default {
       this.show = false
     },
     confirm (photo) {
-      console.log(666)
-      this.show = false
-      console.log(photo)
+      // 修改小头像
       this.userInfo.photo = photo
+      // 关闭弹出层
+      this.show = false
     }
   }
 }

@@ -1,19 +1,32 @@
 <template>
-    <div>
-      <van-pull-refresh v-model="refreshing" @refresh="loadNextPage" success-text="刷新成功！">
-        <van-list @load="loadNextPage" offset=0 v-model="loading" :finished="finished"
+  <div>
+    <van-pull-refresh
+      v-model="refreshing"
+      @refresh="loadNextPage"
+      success-text="刷新成功！"
+    >
+      <van-list
+        @load="loadNextPage"
+        offset="0"
+        v-model="loading"
+        :finished="finished"
         finished-text="没有更多了"
         :error.sync="error"
-  error-text="请求失败，点击重新加载">
-        <ArtistListItem v-for="item in articles" :key="item.art_id" :articleInfo=item ></ArtistListItem></van-list>
-      </van-pull-refresh>
-
-    </div>
+        error-text="请求失败，点击重新加载"
+      >
+        <ArtistListItem
+          v-for="item in articles"
+          :key="item.art_id"
+          :articleInfo="item"
+        ></ArtistListItem
+      ></van-list>
+    </van-pull-refresh>
+  </div>
 </template>
 
 <script>
-// 引入获取文章新闻推荐的接口
-import { getArticleListAPI } from '@/api'
+// 引入获取文章新闻推荐/评论的接口
+import { getArticleListAPI, getCommentsAplyAPI } from '@/api'
 // 引入文章信息展示模版组件
 import ArtistListItem from '../component/ArtistListItem.vue'
 export default {
@@ -33,9 +46,7 @@ export default {
     }
   },
 
-  mounted () {
-
-  },
+  mounted () {},
   created () {
     this.getArticleList()
   },
@@ -45,6 +56,8 @@ export default {
         const { data } = await getArticleListAPI(this.id, +new Date())
         this.articles = data.data.results
         this.pre_timestamp = data.data.pre_timestamp
+        const res = await getCommentsAplyAPI('a', this.id)
+        console.log(res)
       } catch (error) {
         // 返回状态码
         // 507 数据库错误
@@ -59,13 +72,14 @@ export default {
         }
       }
     },
-    // 加载是触发的事件
+    // 加载时触发的事件
     async loadNextPage () {
       try {
         const { data } = await getArticleListAPI(this.id, this.pre_timestamp)
         // console.log(data) //= =>在返回空数据之前的时间戳为null pre_timestamp: null
         // 将获取到的下一页的数据push到保存文章数据的数组中，注意在这里获取到的是下一页数据的新数组，必须先运用展开运算符先解构出每一项的值再进行push
-        if (!data.data.pre_timestamp) { // 这里需要通过后端返回的时间戳进行判断，如果返回的数据中的时间戳为null，则说明在此次请求数据返回之后就就没有数据再返回了，所以在此次请求之后将finished属性设置为true,阻止再发起loading事件
+        if (!data.data.pre_timestamp) {
+          // 这里需要通过后端返回的时间戳进行判断，如果返回的数据中的时间戳为null，则说明在此次请求数据返回之后就就没有数据再返回了，所以在此次请求之后将finished属性设置为true,阻止再发起loading事件
           this.finished = true
         }
         // 新增判断，根据是否处于下拉刷新的状态下refreshing=true/false，如果正处于刷新状态就添加到数组的头部，否则就为上拉加载状态添加到尾部
@@ -112,6 +126,4 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>
